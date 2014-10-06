@@ -1,0 +1,26 @@
+
+form div {
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.chat-peeps {   
+    border: 1px solid #D5D5D5;
+}
+
+.chat-convo {
+    min-height: 200px;
+    max-height: 500px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    border: 1px solid #D5D5D5;
+}
+
+.chat-input {
+    width: 100%;
+}
+
+footer {
+    width: 100%;
+    text-align: center;
+}

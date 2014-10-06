@@ -1,0 +1,36 @@
+{
+  "name": "chat-stub",
+  "version": "0.1.0",
+  "description": "chat-stub",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jsandoval81/chat-stub.git"
+  },
+  "author": "John Sandoval",
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "ejs": "~0.8.5",
+    "express": "~4.2.0",
+    "mongoose": "^3.8.17",
+    "socket.io": "^1.1.0"
+  },
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "chai-things": "^0.2.0",
+    "grunt": "^0.4.5",
+    "grunt-concurrent": "^0.5.0",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-concat": "^0.5.0",
+    "grunt-contrib-copy": "^0.5.0",
+    "grunt-contrib-cssmin": "^0.10.0",
+    "grunt-contrib-uglify": "^0.5.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-nodemon": "^0.3.0",
+    "grunt-shell": "^0.7.0",
+    "load-grunt-tasks": "^0.6.0",
+    "mocha": "^1.21.4"
+  }
+}
