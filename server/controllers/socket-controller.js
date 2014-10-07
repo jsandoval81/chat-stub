@@ -9,8 +9,11 @@ var MessageModel = require('../models/message');
 module.exports = {
     initialize: function (app) {
         //== Create the http server and websockets
-        var server = http.Server(app),
-            io     = socketio(server);
+        var server    = http.Server(app),
+            io        = socketio(server),
+            users,
+            session,
+            messages  = [];
 
         server.listen(3201);
         console.log('socket.io server listening on port 3201');
@@ -18,25 +21,30 @@ module.exports = {
         //== Listen for websockets connections
         io.on('connection', function (client) {
             //== Listen for join events from the client
-            client.on('join', function (data) {
+            client.on('join', function (name) {
                 //== Add the username to the client and query the current list of chatters
-                client.username = data;
-                UserModel.findOne({'chatters.0': {'$exists': true}}, function (err, users) {
+                client.username = name;
+                UserModel.findOne({'chatRoom': 'default'}, function (err, users) {
                     //== If no user documents exist with chatters then create a new document
                     if (!users) {
                         console.log('Creating chatter document in Mongo');
-                        //== TODO: Timestamp the new user document so old documents (chat sessions) can contain history-type data
-                        var users = new UserModel();
+                        users = new UserModel({ chatRoom: 'default' });
                     }
-                    //== Add the new chatter to the active document in the DB
-                    users.chatters.push(data);
+                    //== Add the new chatter to the chat room list in the DB
+                    users.chatters.push(name);
                     users.save(function (err) {
                         if (err) {
-                            console.log(data + " was not able to join the chat because of DB errors");
+                            console.log(name + ' was not able to join the chat because of DB errors');
                         } else {
-                            //== Emit the joined event to the clients
-                            io.emit('joined', data);
-                            console.log(data + " has joined the chat");
+                            //== Get the recent messages from the DB
+                            MessageModel.findOne({ 'chatRoom': 'default' }, function (err, session) {
+                                if (session.messages[0]) {
+                                    messages = session.messages;
+                                }
+                                //== Emit the joined event to the clients
+                                io.emit('joined', { name: name, chatters: users.chatters, messages: messages });
+                                console.log(name + ' has joined the chat');
+                            });
                         }
                     });
                 });
@@ -44,7 +52,26 @@ module.exports = {
 
             //== Listen for message events from the client
             client.on('message', function (data) {
-                io.emit('message', { name: data.name, message: data.message });
+                MessageModel.findOne({ 'chatRoom': 'default' }, function (err, session) {
+                    //== If no documents exist with messages then create a new document
+                    if (!session) {
+                        console.log('Creating messages document in Mongo');
+                        session = new MessageModel({ chatRoom: 'default' });
+                    }
+                    //== Add the message to the messages list on Mongo
+                    session.messages.unshift({ nickname: data.name, text: data.message });
+                    //== Only keep the last 10 messages
+                    if (session.messages.length > 10) {
+                        session.messages = session.messages.slice(0, 10);
+                    }
+                    session.save(function (err) {
+                        if (err) {
+                            console.log('Could not save message to the DB because of errors');
+                        } else {
+                            io.emit('message', { name: data.name, message: data.message });
+                        }
+                    });
+                });
             });
 
             //== Listen for disconnect events from the client
@@ -53,7 +80,6 @@ module.exports = {
                 UserModel.findOne({'chatters.0': {'$exists': true}}, function (err, users) {
                     //== Remove the diconnected user from the active document in the DB
                     if (users.chatters.indexOf(client.username) > -1) {
-                        //== TODO: Add some more fields for history reporting
                         users.chatters.splice(users.chatters.indexOf(client.username), 1);
                     }
                     users.save(function (err) {
@@ -68,6 +94,6 @@ module.exports = {
                     });
                 });
             });
-        })
+        });
     }
 };

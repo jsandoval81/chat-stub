@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 
 //== Define the schema for our user (chatter) model
 var userSchema = mongoose.Schema({
+    chatRoom: String,
     chatters: [String]
 });
 
