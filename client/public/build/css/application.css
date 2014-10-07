@@ -6209,7 +6209,7 @@ form div {
 }
 
 .chat-peeps {   
-    border: 1px solid #D5D5D5;
+    
 }
 
 .chat-convo {
@@ -6222,6 +6222,20 @@ form div {
 
 .chat-input {
     width: 100%;
+}
+
+.chat-message {
+    padding: 5px;
+}
+
+.chat-message-user {
+    padding: 5px;
+    border-radius: 10px;
+    background-color: #F0F0F0;
+}
+
+.chat-message-text {
+    padding: 5px;
 }
 
 footer {

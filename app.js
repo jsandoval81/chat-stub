@@ -2,6 +2,7 @@
 
 var express  = require('express');
 var path     = require('path');
+var mongoose = require('mongoose');
 var routes   = require('./server/routes/home-routes');
 var db       = require('./server/db/db-config');
 var chat     = require('./server/controllers/socket-controller');
@@ -32,7 +33,11 @@ chat.initialize(app);
 //==============================
 //== Initialize DB Connection ==
 //==============================
-db.connect();
+/*db.connect();*/
+mongoose.connect('mongodb://localhost/temp-chat');
+mongoose.connection.on('open', function () {
+    console.log('Connected to Mongoose...');
+});
 
 //== Expose the express app
 module.exports = app;
