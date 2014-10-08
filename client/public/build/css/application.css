@@ -6203,15 +6203,13 @@ button.close {
 /*# sourceMappingURL=bootstrap.css.map */
 
 
+/* Form styles */
 form div {
     border-radius: 10px;
     padding: 5px;
 }
 
-.chat-peeps {   
-    
-}
-
+/* Chat form elements */
 .chat-convo {
     min-height: 200px;
     max-height: 500px;
@@ -6238,8 +6236,22 @@ form div {
     padding: 5px;
 }
 
+/* Global page elements */
 footer {
     width: 100%;
     text-align: center;
 }
 
+/* Utility classes */
+.vertical-center {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+}
+
+.vertical-bottom {
+    display: inline-block;
+    vertical-align: bottom;
+    float: none;
+}
+/* Custom Media queries */

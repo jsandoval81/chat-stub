@@ -17498,7 +17498,9 @@ function toArray(list, index) {
 (1)
 });
 
-
+//====================================================================
+//== Custom client-side JS to handle the socket events for the chat ==
+//====================================================================
 (function ($) {
     'use strict';
 
@@ -17539,6 +17541,7 @@ function toArray(list, index) {
                                '<span class="chat-message-user">' + data.messages[messageLoop].nickname + ' said:</span>' +
                                '<span class="chat-message-text">' + data.messages[messageLoop].text + '</span>' +
                                '</div>';
+                //== TODO: Render an EJS template/partial from the controller rather than build the markup here
             }
             if (messageList) {
                 $('.chat-convo').append(messageList);
@@ -17548,6 +17551,7 @@ function toArray(list, index) {
         $('.chat-convo').append('<div class="chat-message">' +
                                 '<span class="chat-message-user">' + data.name + ' has joined the chat</span>' +
                                 '</div>');
+        //== TODO: Render an EJS template/partial from the controller rather than build the markup here
     });
 
     //== Handle the message emission from the server
@@ -17556,6 +17560,7 @@ function toArray(list, index) {
                                 '<span class="chat-message-user">' + data.name + ' says:</span>' +
                                 '<span class="chat-message-text">' + data.message + '</span>' +
                                 '</div>');
+        //== TODO: Render an EJS template/partial from the controller rather than build the markup here
     });
 
     //== Handle the disconnect emission from the server
@@ -17564,6 +17569,7 @@ function toArray(list, index) {
         $('.chat-convo').append('<div class="chat-message">' +
                                 '<span class="chat-message-user">' + user + ' has left the chat</span>' +
                                 '</div>');
+        //== TODO: Render an EJS template/partial from the controller rather than build the markup here
     });
 
     //== Emit messages to the server

@@ -1,5 +1,6 @@
+'use strict';
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
@@ -108,7 +109,15 @@ module.exports = function(grunt) {
                 src:  'client/public/build/js/application.js',
                 dest: 'client/public/build/js/application.min.js'
             }
-        },
+        }
+
+        //== TODO: JSLint/JSHint task
+
+        //== TODO: LESS compiler
+
+        //== TODO: CSSLint task
+
+        //== TODO: Karma test runner task(s)
 
     });
 
@@ -124,5 +133,6 @@ module.exports = function(grunt) {
     grunt.registerTask('default', ['']);
     //== Dev task
     grunt.registerTask('dev', ['concurrent:dev']);
-    
+    //== TODO: Production-like build task(s)
+
 };

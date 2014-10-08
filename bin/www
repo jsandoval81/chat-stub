@@ -1,5 +1,6 @@
+//== Express app dev config
 
-var app   = require('../app');
+var app = require('../app');
 
 app.set('port', 3200);
 

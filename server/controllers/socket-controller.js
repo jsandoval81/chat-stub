@@ -8,7 +8,9 @@ var MessageModel = require('../models/message');
 
 module.exports = {
     initialize: function (app) {
-        //== Create the http server and websockets
+        //===========================================
+        //== Create the http server and websockets ==
+        //===========================================
         var server    = http.Server(app),
             io        = socketio(server),
             users,
@@ -18,7 +20,9 @@ module.exports = {
         server.listen(3201);
         console.log('socket.io server listening on port 3201');
 
-        //== Listen for websockets connections
+        //==================================================
+        //== Listen for connection events from the client ==
+        //==================================================
         io.on('connection', function (client) {
             //== Listen for join events from the client
             client.on('join', function (name) {
@@ -50,7 +54,9 @@ module.exports = {
                 });
             });
 
-            //== Listen for message events from the client
+            //===============================================
+            //== Listen for message events from the client ==
+            //===============================================
             client.on('message', function (data) {
                 MessageModel.findOne({ 'chatRoom': 'default' }, function (err, session) {
                     //== If no documents exist with messages then create a new document
@@ -64,26 +70,29 @@ module.exports = {
                     if (session.messages.length > 10) {
                         session.messages = session.messages.slice(0, 10);
                     }
+                    //== Save the recent messages to the DB
                     session.save(function (err) {
                         if (err) {
                             console.log('Could not save message to the DB because of errors');
                         } else {
+                            //== Emit the message event to the clients
                             io.emit('message', { name: data.name, message: data.message });
                         }
                     });
                 });
             });
 
-            //== Listen for disconnect events from the client
+            //==================================================
+            //== Listen for disconnect events from the client ==
+            //==================================================
             client.on('disconnect', function (data) {
-                //== Query the current document for chatters
                 UserModel.findOne({'chatters.0': {'$exists': true}}, function (err, users) {
                     //== Remove the diconnected user from the active document in the DB
                     if (users.chatters.indexOf(client.username) > -1) {
                         users.chatters.splice(users.chatters.indexOf(client.username), 1);
                     }
                     users.save(function (err) {
-                        //== Emit the disconnect message (with errors if the exist)
+                        //== Emit the disconnect message to the remaining clients (with errors if they exist)
                         if (err) {
                             io.emit('disconnect', client.username);
                             console.log(client.username + " has left the chat (with errors)");
